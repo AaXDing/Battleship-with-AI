@@ -16,13 +16,13 @@ bool addStandardShips(Game &g)
 
 int main()
 {
-    const int NTRIALS = 10;
+    const int NTRIALS = 1000;
 
     cout << "Select one of these choices for an example of the game:" << endl;
     cout << "  1.  A mini-game between two mediocre players" << endl;
-    cout << "  2.  A mediocre player against a human player" << endl;
+    cout << "  2.  A computer player against a human player" << endl;
     cout << "  3.  A " << NTRIALS
-         << "-game match between a mediocre and an awful player, with no pauses"
+         << "-game match between a clever and a mediocre player, with no pauses"
          << endl;
     cout << "Enter your choice: ";
     string line;
@@ -46,7 +46,29 @@ int main()
     {
         Game g(10, 10);
         addStandardShips(g);
-        Player *p1 = createPlayer("mediocre", "Mediocre Midori", g);
+        cout << "Select one of the computer player to play against:" << endl
+            << "  1.  Awful Audrey" << endl
+            << "  2.  Mediocre Midori" << endl
+            << "  3.  Clever Cleveland" << endl;
+        line.clear();
+        getline(cin, line);
+        Player *p1;
+        if(line.empty()){
+            cout << "You did not choose a player" << endl;
+        }
+        else if (line[0] == '1'){
+            p1 = createPlayer("awful", "Awful Audrey", g);
+        }
+        else if (line[0] == '2'){
+            p1 = createPlayer("mediocre", "Mediocre Midori", g);
+        }
+        else if (line[0] == '3'){
+            p1 = createPlayer("good", "Clever Cleveland", g);
+        }
+        else
+        {
+            cout << "That's not one of the choices." << endl;
+        }
         Player *p2 = createPlayer("human", "Shuman the Human", g);
         g.play(p1, p2);
         delete p1;
@@ -54,7 +76,7 @@ int main()
     }
     else if (line[0] == '3')
     {
-        int nMediocreWins = 0;
+        int nGoodWins = 0;
 
         for (int k = 1; k <= NTRIALS; k++)
         {
@@ -62,16 +84,16 @@ int main()
                  << " =============================" << endl;
             Game g(10, 10);
             addStandardShips(g);
-            Player *p1 = createPlayer("awful", "Awful Audrey", g);
+            Player *p1 = createPlayer("mediocre", "Mediocre Mimi", g);
             // Player *p1 = createPlayer("good", "Good Boy", g);
-            Player *p2 = createPlayer("mediocre", "Mediocre Mimi", g);
+            Player *p2 = createPlayer("good", "Clever Charlie", g);
             Player *winner = (k % 2 == 1 ? g.play(p1, p2, false) : g.play(p2, p1, false));
             if (winner == p2)
-                nMediocreWins++;
+                nGoodWins++;
             delete p1;
             delete p2;
         }
-        cout << "The mediocre player won " << nMediocreWins << " out of "
+        cout << "The clever player won " << nGoodWins << " out of "
              << NTRIALS << " games." << endl;
         // We'd expect a mediocre player to win most of the games against
         // an awful player.  Similarly, a good player should outperform
